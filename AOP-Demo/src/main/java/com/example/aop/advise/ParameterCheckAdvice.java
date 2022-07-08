@@ -6,21 +6,26 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
 
 @Aspect
 @Component
-public class PermissionAdvice {
+@Order(1)
+public class ParameterCheckAdvice {
 
-    @Pointcut("@@annotation(com.example.aop.annotation.PermissionAnnotation)")
+    @Pointcut("@annotation(com.example.aop.annotation.PermissionAnnotation)")
     private void permissionCheck(){
     }
 
     @Around("permissionCheck()")
     public Object permissionCheckFirst(ProceedingJoinPoint joinPoint) throws Throwable {
-        System.out.println("-----第一个切面-----" + System.currentTimeMillis());
+        System.out.println("-----第一个切面,校验参数-----" + System.currentTimeMillis());
 
         Object[] args = joinPoint.getArgs();
+        System.out.println(Arrays.toString(args));
         Long id = ((JSONObject)args[0]).getLong("id");
         String name = ((JSONObject)args[0]).getString("name");
         System.out.println("id1->>>>>>>>>>>>>>>>>>>>>>" + id);
